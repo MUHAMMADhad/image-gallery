@@ -1,42 +1,67 @@
 console.log("Gallery JS connected.");
 
+const images = document.querySelectorAll(".small-image");
+let currentIndex = 0;
 
-const images = document.querySelectorAll('.small-image');
-
-images.forEach((img) => {
+images.forEach((img, index) => {
     img.addEventListener('click', () => {
-        openLightbox(img.src);
+        openLightbox(index);
     });
 });
 
-// Function to open the lightbox
-function openLightbox(src) {
-    // Create lightbox container
-    const lightbox = document.createElement('div');
-    lightbox.className = 'lightbox';
+function openLightbox(index) {
+  currentIndex = index;
 
-    // Create image
-    const img = document.createElement('img');
-    img.src = src;
+  const lightbox = document.createElement("div");
+  lightbox.className = "lightbox";
 
-    // Create close button
-    const closeBtn = document.createElement('span');
-    closeBtn.className = 'lightbox-close';
-    closeBtn.innerHTML = '&times;';
+  const img = document.createElement("img");
+  img.src = images[currentIndex].src;
 
-    // Close events
-    closeBtn.addEventListener('click', () => {
-        lightbox.remove();
-    });
+  // Prev button
+  const prevBtn = document.createElement("button");
+  prevBtn.textContent = "❮";
+  prevBtn.className = "lightbox-prev";
 
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            lightbox.remove();
-        }
-    });
+  // Next button
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "❯";
+  nextBtn.className = "lightbox-next";
 
-    // Append elements
-    lightbox.appendChild(img);
-    lightbox.appendChild(closeBtn);
-    document.body.appendChild(lightbox);
+  // Close button
+  const closeBtn = document.createElement("span");
+  closeBtn.innerHTML = "&times;";
+  closeBtn.className = "lightbox-close";
+
+  // Events
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+        currentIndex--;
+    }else {
+        currentIndex = images.length - 1;
+    }   
+    img.src = images[currentIndex].src;
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < images.length - 1) {
+      currentIndex++;
+    } else {
+      currentIndex = 0;
+    }   
+    img.src = images[currentIndex].src;
+  });
+
+  closeBtn.addEventListener("click", () => {
+    lightbox.remove();
+  });
+
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) {
+      lightbox.remove();
+    }
+  });
+
+  lightbox.append(prevBtn, img, nextBtn, closeBtn);
+  document.body.appendChild(lightbox);
 }
